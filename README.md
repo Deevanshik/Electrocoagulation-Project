@@ -1,121 +1,67 @@
-# Electrocoagulation-Project
-
 # Electrocoagulation Prediction
 
-A regression-based project to predict electric current and residence time in an electrocoagulation treatment process, using experimental parameters such as contaminant concentration, pH, electrode properties, and reactor settings.
+This project focuses on predicting two key outputs of the electrocoagulation water treatment process — **electric current** and **residence time** — using various experimental parameters.
 
 ---
 
-## 📋 Project Overview
+## 📌 Project Objective
 
-Electrocoagulation is a water-treatment technique that uses electrical current to remove dissolved contaminants (e.g., arsenic, fluoride). This project demonstrates an end-to-end pipeline to:
-
-1. **Load & clean** experimental data  
-2. **Explore** feature distributions and correlations  
-3. **Train & compare** multiple regression models  
-4. **Evaluate** predictive performance on held-out data  
-5. **Draw conclusions** and recommend best models  
+To build machine learning models that can accurately predict the operating current and treatment duration based on input features such as contaminant concentration, pH, electrode configuration, and reactor setup.
 
 ---
 
-## 🗄 Dataset
+## 🧪 Dataset
 
-- **Source file:** `Project_updated_trial.csv`  
-- **Rows:** 371  
-- **Columns (after renaming):**  
-  - Contaminant (As, F)  
-  - Initial & Final Concentration (mg/L)  
-  - % Removal  
-  - Initial pH  
-  - Current (A)  
-  - Electrode Gap (cm)  
-  - Current Density (A/m²)  
-  - Residence Time (min)  
-  - Reactor Volume (mL)  
-  - Electrode Material (Al, Fe, Fe-Al)  
-  - Electrode Area (m²)  
+- Contains **371 experimental records**
+- Features include:
+  - Contaminant type (As, F)
+  - Initial/Final concentrations
+  - % removal, pH, electrode gap, current density
+  - Electrode material, reactor volume, and more
 
 ---
 
-## 🔄 Data Preprocessing
+## ⚙️ Workflow Summary
 
-- **Dropped** irrelevant IDs (S.No, Reference No.) and non-informative “Batch/Continuous” (98% Batch).  
-- **Imputed** missing values:  
-  - pH → 7 (median)  
-  - Gap → 1 cm (median)  
-- **Standardized** categorical labels for electrode materials.  
-- **Scaled** numerical features (StandardScaler) and **one-hot encoded** electrode material.
+1. **Data Cleaning & Preprocessing**
+   - Renamed and cleaned columns
+   - Imputed missing values
+   - Standardized categories and scaled features
 
----
+2. **Exploratory Data Analysis**
+   - Summary statistics
+   - Distribution plots
+   - Correlation heatmaps
 
-## 🔍 Exploratory Analysis
-
-- **Descriptive statistics** highlighted skewed concentration distributions and bimodal pH.  
-- **Correlation heatmap** revealed:  
-  - Strong negative correlation between % removal and final concentration  
-  - High positive correlation between current and current density  
-  - Moderate links (e.g., gap vs final concentration)  
+3. **Modeling**
+   - Trained multiple regressors: Linear, SVR, Decision Tree, Random Forest, XGBoost
+   - Evaluated using R² on test set
+   - Separate models for arsenic and fluoride datasets
 
 ---
 
-## 🤖 Modeling & Evaluation
+## ✅ Key Outcomes
 
-### Models Compared
-- **Linear Regression**, **Ridge**, **Lasso**  
-- **Support Vector Regression** (linear kernel)  
-- **Decision Tree Regressor**  
-- **Random Forest Regressor** (500 trees)  
-- **XGBoost Regressor** (500 trees)
-
-### Targets & Splits
-- Predict **Current** and **Residence Time** separately  
-- Train/test split: 80/20 (random_state=42)
-
-### Performance (R² on test set)
-
-| Model            | As_Current | As_Time | F_Current | F_Time |
-|------------------|-----------:|--------:|----------:|-------:|
-| Linear           | 0.73       | 0.54    | 0.82      | 0.80   |
-| Ridge            | 0.74       | 0.50    | 0.82      | 0.80   |
-| Lasso            | 0.84       | 0.53    | 0.80      | 0.80   |
-| SVR (linear)     | 0.74       | 0.61    | 0.82      | 0.40   |
-| **Decision Tree**| **0.96**   | 0.36    | **0.98**  | 0.71   |
-| **Random Forest**| **0.96**   | **0.77**| **0.98**  | **0.91**|
-| XGBoost          | **0.97**   | 0.65    | 0.85      | 0.80   |
-
-> Best overall: **Random Forest** for both current and time (highest average R²)  
-> XGBoost excels at arsenic current; Decision Tree is surprisingly strong on fluoride current.
+- **Random Forest** and **XGBoost** showed the best performance for both current and time prediction.
+- Achieved **R² scores above 0.96** for current prediction and up to **0.91** for residence time.
 
 ---
 
-## ⚠️ Potential Limitations
+## ⚠️ Observations
 
-- **Residence Time** is harder to predict (lower R²), suggesting missing features or complex dynamics.  
-- **Data imbalance:** Batch mode dominates—model may not generalize to continuous operation.  
-- **Correlation-based multicollinearity:** Current & density highly correlated; future work could remove redundant features.  
-- **Limited dataset size** (371 points) and two contaminants only—further experiments may improve robustness.
-
----
-
-## 🚀 Future Work
-
-- **Feature engineering:** Transform skewed variables (e.g., log-transform concentrations), derive interaction terms.  
-- **Data collection:** Gather more experiments across a wider range of operating modes and contaminants.  
-- **Advanced models:** Try deep learning or Gaussian process regression for uncertainty quantification.  
-- **Deployment:** Build a simple web API or dashboard to input process parameters and get real-time predictions.
+- Residence time is harder to model than current.
+- Slight data imbalance (mostly batch mode operations).
+- Feature correlations and data size may limit generalization.
 
 ---
 
-## 📂 Repository Structure
+## 📁 Files
 
-```text
-├── data/
-│   └── Project_updated_trial.csv
-├── notebooks/
-│   └── Electrocoagulation_prediction.ipynb
-├── src/
-│   ├── preprocessing.py
-│   ├── modeling.py
-│   └── evaluation.py
-├── README.md
-└── requirements.txt
+- `Electrocoagulation_prediction.ipynb`: Main notebook with all details
+- `Project_updated_trial.csv`: Dataset used
+
+---
+
+## 📌 Note
+
+For detailed analysis, model comparison, and code, refer to the Jupyter notebook in the repository.
